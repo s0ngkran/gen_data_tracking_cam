@@ -8,12 +8,40 @@ import os
 import pickle
 import copy
 import datetime
+import json
 
 def sk_log(txt):
     now = datetime.datetime.now()
     now = now.strftime("%c")
     with open('sk_log.txt', 'a') as f:
         f.write(now + '|' + txt+'\n')
+        
+class Setting:
+    def __init__(self, ):
+        if not os.path.exists('./setting'):
+            with open('./setting', 'w') as file:
+                dat = {
+                    'imgfolder':'./',
+                    'checkfolder':'./',
+                    'imi':'1',
+                }
+                json.dump(dat, file)
+                print('create new setting')
+        with open('setting') as f:
+            data = json.load(f)
+            self.imgfolder = data['imgfolder']
+            self.checkfolder = data['checkfolder']
+            self.imi = data['imi']
+    def update(self,):
+        with open('./setting', 'w') as file:
+            dat = {
+                'imgfolder':self.imgfolder,
+                'checkfolder':self.checkfolder,
+                'imi':self.imi,
+            }
+            json.dump(dat, file)
+            # print('update setting', dat)
+            
 
 class Stage:
     def __init__(self, folder):
@@ -93,6 +121,8 @@ class myframe(MyFrame1):
         self.auto_clear = True
         self.auto_open_imgfolder()  ######## can delete ############
         self.no_pkl = False
+        self.setting = Setting()
+        
     def save_mp4( self, event ):
         event.Skip()
 
@@ -655,57 +685,66 @@ class myframe(MyFrame1):
                 self.draw_move(event)
                 self.log('point[%d] is relocating to (%d, %d)'%(self.nearest_index,self.click[0],self.click[1]))
         
-    def open_a_data( self, event ):
-        with wx.FileDialog(self, "Open .pkl file", wildcard="pkl files (*.pkl)|*.pkl",
-                       style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as fileDialog:
+    def open_a_data(self, event, auto=False):
+        if auto:
+            foldername = self.setting.checkfolder
+            self.imi = self.setting.imi
+            pathname = os.path.join(foldername, str(self.imi).zfill(10)+'.bmp')
+            filename = str(self.imi).zfill(10)+'.pkl'
+            
+        else:
+            with wx.FileDialog(self, "Open .pkl file", wildcard="pkl files (*.pkl)|*.pkl",
+                        style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as fileDialog:
 
-            if fileDialog.ShowModal() == wx.ID_CANCEL:
-                return     # the user changed their mind
-            # Proceed loading the file chosen by the user
-            pathname = fileDialog.GetPath()
-            filename = fileDialog.GetFilename()
-            foldername = fileDialog.GetDirectory()
-            pkl_file = os.path.join(foldername, filename)
-            bmp_file = os.path.join(foldername, filename[:10] + '.bmp')
-            pathname = bmp_file 
+                if fileDialog.ShowModal() == wx.ID_CANCEL:
+                    return     # the user changed their mind
+                # Proceed loading the file chosen by the user
+                pathname = fileDialog.GetPath()
+                filename = fileDialog.GetFilename()
+                foldername = fileDialog.GetDirectory()
             
-            
-            try:
-                #reset img
-                wximg = wx.Bitmap(bmp_file, wx.BITMAP_TYPE_ANY)
-                width = wximg.GetWidth()
-                self.wximg = self.scale_bitmap(wximg, 500/width)
-                assert self.hand_mode in [2,11,25]
-                if self.hand_mode == 11:
-                    dir_temp = pathname[:-4] + '.pkl'
-                elif self.hand_mode == 2:
-                    dir_temp = pathname[:-4] + '_2p.pkl'
-                elif self.hand_mode == 25: 
-                    dir_temp = pathname[:-4] + '_25p.pkl'
-            
-                with open(dir_temp, "rb") as f:
-                    data = pickle.load(f)
-                    
-                self.point_temp = data['keypoint']
-                self.covered_point = data['covered_point']
-            
-                self.img_folder = foldername
-                # print(self.img_folder)
+        pkl_file = os.path.join(foldername, filename)
+        bmp_file = os.path.join(foldername, filename[:10] + '.bmp')
+        pathname = bmp_file 
+        self.setting.checkfolder = foldername
+        self.setting.update()
+             
+        try:
+            #reset img
+            wximg = wx.Bitmap(bmp_file, wx.BITMAP_TYPE_ANY)
+            width = wximg.GetWidth()
+            self.wximg = self.scale_bitmap(wximg, 500/width)
+            assert self.hand_mode in [2,11,25]
+            if self.hand_mode == 11:
+                dir_temp = pathname[:-4] + '.pkl'
+            elif self.hand_mode == 2:
+                dir_temp = pathname[:-4] + '_2p.pkl'
+            elif self.hand_mode == 25: 
+                dir_temp = pathname[:-4] + '_25p.pkl'
+        
+            with open(dir_temp, "rb") as f:
+                data = pickle.load(f)
                 
-                # print(fname)
-                self.imi = int(filename[:10])
-                # print(self.imi)
-                # print('bef read')
-                
-                self.read_pkl(event)
+            self.point_temp = data['keypoint']
+            self.covered_point = data['covered_point']
+        
+            self.img_folder = foldername
+            # print(self.img_folder)
             
-                # print('after read')
-                self.log(pathname)
-                
-                self.checking_mode = True
+            # print(fname)
+            self.imi = int(filename[:10])
+            # print(self.imi)
+            # print('bef read')
+            
+            self.read_pkl(event)
+        
+            # print('after read')
+            self.log(pathname)
+            
+            self.checking_mode = True
 
-            except :
-                wx.MessageBox('Cannot open %s'%dir_temp,'Warning',wx.OK)
+        except :
+            wx.MessageBox('Cannot open %s'%dir_temp,'Warning',wx.OK)
             
     def open_a_folder( self, event ):
         print('not assigned now')
@@ -755,6 +794,11 @@ class myframe(MyFrame1):
         self.m_menuItem171.Check(False)
         self.m_menuItem181.Check(True)
         self.Redraw(event)
+    def link_toggle(self, event):
+        if self.link_show_:
+            self.link_hide(event)
+        else:
+            self.link_show(event)
     def link_show(self,event):
         self.link_show_ = True
         self.m_menuItem172.Check(True)
@@ -905,6 +949,9 @@ class myframe(MyFrame1):
                 with open(dir_temp, "wb") as f:
                     pickle.dump(dictionary_data, f)
                     sk_log('saved '+img_name)
+                    self.setting.imi = self.imi
+                    self.setting.update()
+                
                 self.real_im = []
                 self.point_temp = []
                 self.covered_point = [False for i in range(self.hand_mode)]
@@ -926,6 +973,7 @@ class myframe(MyFrame1):
                 wx.MessageBox('need %d keypoint to save'%self.hand_mode, 'Cannot save !',wx.OK )
         
     def on_key(self, event):
+        # binding key pressed
         key = event.GetKeyCode()
         if key == 32:
             if not self.stop_cam:
@@ -936,9 +984,12 @@ class myframe(MyFrame1):
         elif key==308: #control key pressed
             self.Back(event)
         elif key==307: #alt key
-            self.Save(event)
+            pass
+            # self.link_toggle(event)
         elif key==306:  # shift key
             self.Save(event)
+        elif key==311: # caps lock
+            self.link_toggle(event)
         # print('key=',key)
         event.Skip()
     def testmode(self, event):
@@ -1066,5 +1117,7 @@ class myframe(MyFrame1):
         first = all_bmp[0]
         first = int(first[:-4])
         return first
+    def check_recent(self, event):
+        self.open_a_data(event, auto=True)
 
     

@@ -196,9 +196,9 @@ class MyFrame1 ( wx.Frame ):
 		self.menuItem_open_a_data.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_FILE_OPEN, wx.ART_MENU ) )
 		self.menu_check.Append( self.menuItem_open_a_data )
 
-		self.menuItem_open_a_folder = wx.MenuItem( self.menu_check, wx.ID_ANY, u"open a folder", wx.EmptyString, wx.ITEM_NORMAL )
-		self.menuItem_open_a_folder.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_FILE_OPEN, wx.ART_TOOLBAR ) )
-		self.menu_check.Append( self.menuItem_open_a_folder )
+		self.menuItem_check_recent = wx.MenuItem( self.menu_check, wx.ID_ANY, u"check recent", wx.EmptyString, wx.ITEM_NORMAL )
+		self.menuItem_check_recent.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_FILE_OPEN, wx.ART_TOOLBAR ) )
+		self.menu_check.Append( self.menuItem_check_recent )
 
 		self.m_menubar1.Append( self.menu_check, u"Check" )
 
@@ -313,13 +313,13 @@ class MyFrame1 ( wx.Frame ):
 		self.Bind( wx.EVT_MENU, self.start_track, id = self.m_menuItem61.GetId() )
 		self.Bind( wx.EVT_MENU, self.hand2, id = self.mode_hand2.GetId() )
 		self.Bind( wx.EVT_MENU, self.hand11, id = self.mode_hand11.GetId() )
-		self.Bind( wx.EVT_MENU, self.hand25, id = self.mode_hand25.GetId() )
+		self.Bind( wx.EVT_MENU, self.hand11, id = self.mode_hand25.GetId() )
 		self.Bind( wx.EVT_MENU, self.open_rm_bg, id = self.m_menuItem29.GetId() )
 		self.Bind( wx.EVT_MENU, self.bg_red, id = self.m_menuItem31.GetId() )
 		self.Bind( wx.EVT_MENU, self.bg_green, id = self.m_menuItem32.GetId() )
 		self.Bind( wx.EVT_MENU, self.bg_blue, id = self.m_menuItem33.GetId() )
 		self.Bind( wx.EVT_MENU, self.open_a_data, id = self.menuItem_open_a_data.GetId() )
-		self.Bind( wx.EVT_MENU, self.open_a_folder, id = self.menuItem_open_a_folder.GetId() )
+		self.Bind( wx.EVT_MENU, self.check_recent, id = self.menuItem_check_recent.GetId() )
 		self.m_textCtrl3.Bind( wx.EVT_KEY_UP, self.key_on_go_bmp )
 		self.m_textCtrl3.Bind( wx.EVT_LEFT_DOWN, self.click_on_go_bmp )
 		self.m_button11.Bind( wx.EVT_BUTTON, self.goto_img )
@@ -418,8 +418,6 @@ class MyFrame1 ( wx.Frame ):
 	def hand11( self, event ):
 		event.Skip()
 
-	def hand25( self, event ):
-		event.Skip()
 
 	def open_rm_bg( self, event ):
 		event.Skip()
@@ -436,7 +434,7 @@ class MyFrame1 ( wx.Frame ):
 	def open_a_data( self, event ):
 		event.Skip()
 
-	def open_a_folder( self, event ):
+	def check_recent( self, event ):
 		event.Skip()
 
 	def key_on_go_bmp( self, event ):

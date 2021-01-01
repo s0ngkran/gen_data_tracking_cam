@@ -627,12 +627,12 @@
                         <property name="help"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">open a folder</property>
-                        <property name="name">menuItem_open_a_folder</property>
+                        <property name="label">check recent</property>
+                        <property name="name">menuItem_check_recent</property>
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap">Load From File; </property>
-                        <event name="OnMenuSelection">open_a_folder</event>
+                        <event name="OnMenuSelection">check_recent</event>
                     </object>
                 </object>
             </object>
