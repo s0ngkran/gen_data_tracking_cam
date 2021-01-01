@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='utf-8'?>
+<interface version="1.0">
+  <object class="tk.Menu" id="menu_3">
+    <property name="cursor">arrow</property>
+    <property name="font">TkDefaultFont</property>
+    <property name="relief">flat</property>
+  </object>
+  <object class="ttk.Frame" id="frame_5">
+    <property name="height">200</property>
+    <property name="width">200</property>
+    <layout manager="pack">
+      <property name="propagate">True</property>
+      <property name="side">top</property>
+    </layout>
+    <child>
+      <object class="ttk.Labelframe" id="oe">
+        <property name="cursor">arrow</property>
+        <property name="height">200</property>
+        <property name="text" translatable="yes">test_3
+</property>
+        <property name="width">200</property>
+        <layout manager="pack">
+          <property name="propagate">True</property>
+          <property name="side">top</property>
+        </layout>
+        <child>
+          <object class="ttk.Progressbar" id="progressbar_1">
+            <property name="orient">horizontal</property>
+            <layout manager="pack">
+              <property name="propagate">True</property>
+              <property name="side">top</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Progressbar" id="progressbar_2">
+            <property name="orient">horizontal</property>
+            <layout manager="pack">
+              <property name="propagate">True</property>
+              <property name="side">top</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Progressbar" id="progressbar_3">
+            <property name="orient">horizontal</property>
+            <layout manager="pack">
+              <property name="propagate">True</property>
+              <property name="side">top</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Radiobutton" id="radiobutton_1">
+            <property name="text" translatable="yes">radiobutton_1</property>
+            <layout manager="pack">
+              <property name="propagate">True</property>
+              <property name="side">top</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Scale" id="scale_1">
+            <property name="orient">horizontal</property>
+            <layout manager="pack">
+              <property name="propagate">True</property>
+              <property name="side">top</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Scrollbar" id="scrollbar_1">
+            <property name="orient">horizontal</property>
+            <layout manager="pack">
+              <property name="propagate">True</property>
+              <property name="side">top</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="tk.Menu" id="menu_5">
+    <property name="font">TkFixedFont</property>
+    <property name="postcommand">a</property>
+  </object>
+</interface>
