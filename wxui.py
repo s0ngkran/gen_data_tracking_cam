@@ -273,13 +273,21 @@ class MyFrame1 ( wx.Frame ):
 
 		self.m_mgr.AddPane( self.m_button141, wx.aui.AuiPaneInfo() .Left() .CaptionVisible( False ).CloseButton( False ).PinButton( True ).Dock().Resizable().FloatingSize( wx.DefaultSize ) )
 
-		self.m_button142 = wx.Button( self, wx.ID_ANY, u"reserve...", wx.DefaultPosition, wx.Size( 700,-1 ), 0 )
+		self.m_button142 = wx.Button( self, wx.ID_ANY, u"Delete (ck mode)", wx.DefaultPosition, wx.Size( 700,-1 ), 0 )
 
 		self.m_button142.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_FILE_SAVE, wx.ART_BUTTON ) )
 		self.m_button142.SetMinSize( wx.Size( 700,-1 ) )
 		self.m_button142.SetMaxSize( wx.Size( 700,-1 ) )
 
 		self.m_mgr.AddPane( self.m_button142, wx.aui.AuiPaneInfo() .Left() .CaptionVisible( False ).CloseButton( False ).PinButton( True ).Dock().Resizable().FloatingSize( wx.DefaultSize ) )
+
+		self.m_button1421 = wx.Button( self, wx.ID_ANY, u"reserve...", wx.DefaultPosition, wx.Size( 700,-1 ), 0 )
+
+		self.m_button1421.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_FILE_SAVE, wx.ART_BUTTON ) )
+		self.m_button1421.SetMinSize( wx.Size( 700,-1 ) )
+		self.m_button1421.SetMaxSize( wx.Size( 700,-1 ) )
+
+		self.m_mgr.AddPane( self.m_button1421, wx.aui.AuiPaneInfo() .Left() .CaptionVisible( False ).CloseButton( False ).PinButton( True ).Dock().Resizable().FloatingSize( wx.DefaultSize ) )
 
 
 		self.m_mgr.Update()
@@ -329,7 +337,8 @@ class MyFrame1 ( wx.Frame ):
 		self.m_button13.Bind( wx.EVT_BUTTON, self.Clear )
 		self.m_button14.Bind( wx.EVT_BUTTON, self.Save )
 		self.m_button141.Bind( wx.EVT_BUTTON, self.Reset )
-		self.m_button142.Bind( wx.EVT_BUTTON, self.testmode )
+		self.m_button142.Bind( wx.EVT_BUTTON, self.delete )
+		self.m_button1421.Bind( wx.EVT_BUTTON, self.testmode )
 
 	def __del__( self ):
 		self.m_mgr.UnInit()
@@ -462,6 +471,9 @@ class MyFrame1 ( wx.Frame ):
 		event.Skip()
 
 	def Reset( self, event ):
+		event.Skip()
+
+	def delete( self, event ):
 		event.Skip()
 
 	def testmode( self, event ):

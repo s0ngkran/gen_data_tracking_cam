@@ -907,32 +907,7 @@ class myframe(MyFrame1):
         self.mode_hand11.Check(0)
         self.mode_hand25.Check(1)
         self.Clear(event)
-    def Delete(self, event):
-        resp = wx.MessageBox('Do you want to delete this picture?', 'Confirm'
-                                    ,wx.YES | wx.NO)
-        if resp == wx.YES:
-            #delete
-            dir_temp = os.path.join(self.img_folder
-                    , str(self.imi).zfill(10)+'.bmp')
-            os.remove(dir_temp) # a bug
-            self.log('deleted '+str(self.imi).zfill(10)+'.bmp')
-            #rename
-            i = 0
-            while True:
-                try:
-                    scr = os.path.join(self.img_folder
-                            , str(self.imi+1+i).zfill(10)+'.bmp')
-                    dst = os.path.join(self.img_folder
-                            , str(self.imi+i).zfill(10)+'.bmp')
-                    os.rename(scr, dst)
-                    i += 1
-                except: break
-        try:
-            self.Clear(event)
-        except:
-            wx.MessageBox('This is the last image of this folder', 'Cannot go next !',wx.OK )
-    
-
+        
     def Save(self,event):
 
         if self.open_rm_bg_mode:
@@ -1131,5 +1106,99 @@ class myframe(MyFrame1):
         return first
     def check_recent(self, event):
         self.open_a_data(event, auto=True)
+    def get_pklname(self, i=None):
+        assert self.hand_mode in [2,11,25]
+        if i is None:
+            i = self.imi
+            
+        if self.hand_mode == 11:
+            ans = str(i).zfill(10)+'.pkl'
+        elif self.hand_mode == 2:
+            ans = str(i).zfill(10)+'_2p.pkl'
+        elif self.hand_mode == 25:
+            ans = str(i).zfill(10)+'_25p.pkl'
+        return ans
+    def delete(self, event):
+        resp = wx.MessageBox('Do you want to delete this picture?', 'Confirm'
+                                    ,wx.YES | wx.NO)
+   
+        if self.checking_mode and resp == wx.YES:
+            def rename():
+                try:
+                    num = self.imi
+                    while True: # until cannot
+                        i = str(num+1).zfill(10) + '.bmp'
+                        old_name = os.path.join(folder, i)
+                        
+                        i = str(num).zfill(10) + '.bmp'
+                        new_name = os.path.join(folder, i)
+                        
+                        os.rename(old_name, new_name)
+                        print(num, old_name, '>', new_name)
+                        
+                        ########## pkl ########################
+                        try:
+                            i = self.get_pklname(num+1)
+                            old_name = os.path.join(folder, i)
+                            
+                            i = self.get_pklname(num)
+                            new_name = os.path.join(folder, i)
+                            
+                            os.rename(old_name, new_name)
+                            print(num, old_name, '>', new_name)
+                        except:
+                            print('fail', old_name, '>', new_name)
+                        ##############################################
+                        
+                        num += 1
+                except: pass
+            # end rename function
+            
+            
+            folder = self.setting.checkfolder
+            currentbmp = str(self.imi).zfill(10) + '.bmp'
+            currentpkl = self.get_pklname(self.imi)
+            pathbmp = os.path.join(folder, currentbmp)
+            pathpkl = os.path.join(folder, currentpkl)
+            
+            ### main ###
+            os.remove(pathbmp)
+            try:
+                os.remove(pathpkl)
+            except: print('dint del', pathpkl)
+            
+            rename()
+            self.imi -= 1
+            self.Next(event)
+                
+        
+        # please check self.delete_normal_mode #######################################
+        
+        ############################ need to write for the other mode ####################################################
+        
+    def delete_normal_mode(self, event):
+        
+        #delete
+        dir_temp = os.path.join(self.img_folder
+                , str(self.imi).zfill(10)+'.bmp')
+        os.remove(dir_temp) # a bug
+        self.log('deleted '+str(self.imi).zfill(10)+'.bmp')
+        #rename
+        i = 0
+        while True:
+            try:
+                scr = os.path.join(self.img_folder
+                        , str(self.imi+1+i).zfill(10)+'.bmp')
+                dst = os.path.join(self.img_folder
+                        , str(self.imi+i).zfill(10)+'.bmp')
+                os.rename(scr, dst)
+                i += 1
+            except: break
+            
+        try:
+            self.Clear(event)
+        except:
+            wx.MessageBox('This is the last image of this folder', 'Cannot go next !',wx.OK )
+        
 
     
