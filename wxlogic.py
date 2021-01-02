@@ -96,7 +96,7 @@ class myframe(MyFrame1):
         
         ##link for [25] don't delete
         self.links =       [[0,1],[1,2],[2,3],[0,4],[4,5],[5,6],[6,7],[7,8],[1,4],[4,9],[9,10],[10,11],[11,12],[4,13],[13,14],[14,15],[15,16],[4,17],[17,18],[18,19],[19,20],[1,5],[5,9],[9,13],[13,17],[0,17],[21,22],[22,23],[23,24]]
-        self.links_color = [wx.RED,wx.RED,wx.RED,wx.RED,wx.RED,wx.GREEN,wx.GREEN,wx.GREEN,wx.RED,wx.RED,wx.BLUE,wx.BLUE,wx.BLUE,wx.RED,wx.BLUE,wx.BLUE,wx.BLUE,wx.RED,wx.GREEN,wx.GREEN,wx.GREEN,wx.RED,wx.RED,wx.RED,wx.RED,wx.RED,self.color_pink,self.color_pink,self.color_pink]
+        self.links_color = [wx.RED,wx.RED,wx.RED,wx.RED,wx.RED,wx.GREEN,wx.GREEN,wx.GREEN,wx.RED,wx.RED,wx.BLUE,wx.BLUE,wx.BLUE,wx.RED,wx.BLUE,wx.BLUE,wx.BLUE,wx.RED,wx.GREEN,wx.GREEN,wx.GREEN,wx.RED,wx.RED,wx.RED,wx.RED,wx.RED,wx.RED,self.color_pink,self.color_pink]
         self.roi_show_ = False
         self.keypoint_show_ = True
         self.link_show_ = True
@@ -122,6 +122,12 @@ class myframe(MyFrame1):
         self.auto_open_imgfolder()  ######## can delete ############
         self.no_pkl = False
         self.setting = Setting()
+        self.temp_mouse = 0,0
+        ## hide cursor
+        # self.cursor = wx.Cursor(wx.CURSOR_BLANK)
+        # self.m_bitmap5.SetCursor(self.cursor) 
+        
+    
         
     def save_mp4( self, event ):
         event.Skip()
@@ -426,6 +432,7 @@ class myframe(MyFrame1):
         if num == 11: self.hand_mode = 11
         if num == 25: self.hand_mode = 25
         self.m_bitmap5.Bind(wx.EVT_MOUSE_EVENTS, self.getmousepos)
+        
         # print('5')
 
     def Next(self, event):
@@ -479,7 +486,6 @@ class myframe(MyFrame1):
         # print('end reinit')
 
     def draw(self):
-        # print('start def draw')
         ##### bad section ############# you need to solve #################
         try:
             int(self.real_im_width)
@@ -535,19 +541,17 @@ class myframe(MyFrame1):
                     self.dc.SetBrush(wx.Brush(wx.Colour(255,255,0), wx.SOLID))
                     size = self.keypoint_size-1 if self.keypoint_size > 1 else 1
                 self.dc.DrawCircle(cen,size)
-        # print('out def draw')
+        
+        ############################################## draw mouse pointer
+        # self.dc.DrawCircle(self.temp_mouse, size)
+        
     def draw_bitmap(self):
-        # print('in')
         self.dc = wx.MemoryDC(self.wximg)
-        # print('loaded')
         self.draw()
-        # print('4.5')
         self.dc.SelectObject(wx.NullBitmap)
-        # print('4')
         self.m_bitmap5.SetBitmap(self.wximg)
-        # print('5')
         self.m_mgr.Update()
-        # print('6')
+        
     def manage_point(self, event):
         if len(self.point_temp) < self.hand_mode and len(self.point_temp) != -1 :
             self.point_temp.append(self.click)
@@ -585,7 +589,7 @@ class myframe(MyFrame1):
 
         # re init nearest_point
         rm = self.point_temp[self.nearest_index]
-        self.point_temp.insert(self.nearest_index,self.click)
+        self.point_temp.insert(self.nearest_index, self.click)
         self.point_temp.remove(rm)
         self.mytracks[self.nearest_index] = MyTracker(self.real_im, self.click, self.tracking_roi_size)
         self.draw()
@@ -636,11 +640,14 @@ class myframe(MyFrame1):
     def getmousepos(self, event):
         thres = self.real_im_width/500
         x, y = event.GetPosition()
+        self.temp_mouse = x, y
         
         self.click = int(x*thres), int(y*thres)
         self.left_down = event.LeftDown()
         self.left_up = event.LeftUp()
         self.right_up = event.RightUp()
+        self.mouse_moving = event.Entering()
+        
       
         if self.open_rm_bg_mode:
             if self.left_down and not self.set_mask_thres:
@@ -684,6 +691,11 @@ class myframe(MyFrame1):
             if self.move_point:
                 self.draw_move(event)
                 self.log('point[%d] is relocating to (%d, %d)'%(self.nearest_index,self.click[0],self.click[1]))
+                
+                
+            # update mouse pointer (drawing) # need to solve 
+            # self.Redraw(event)
+            
         
     def open_a_data(self, event, auto=False):
         if auto:
