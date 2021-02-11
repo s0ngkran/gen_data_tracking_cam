@@ -69,13 +69,14 @@ class MyTracker():
         self.center = point
         cx, cy = point[0], point[1]
         self.roi = cx-offset/2, cy-offset/2, offset, offset
-        self.tracker = cv2.TrackerCSRT_create()
-        self.tracker.init(cvimg, self.roi)
+        # self.tracker = cv2.TrackerCSRT_create()
+        # self.tracker.init(cvimg, self.roi)
 
     def update(self, cvimg):
-        success, self.roi = self.tracker.update(cvimg)
-        left, top, width, height = self.roi
-        self.center = left+width/2, top+height/2
+        # success, self.roi = self.tracker.update(cvimg)
+        # left, top, width, height = self.roi
+        # self.center = left+width/2, top+height/2
+        pass
 
 class myframe(MyFrame1):
     def __init__(self, parent, app):

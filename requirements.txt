@@ -1,10 +1,5 @@
-altgraph==0.17
-future==0.18.2
-numpy==1.19.0
-opencv-contrib-python==4.4.0.46
-opencv-python==4.3.0.36
-pefile==2019.4.18
-Pillow==7.2.0
-pywin32-ctypes==0.2.0
+numpy==1.20.1
+opencv-python
+Pillow==8.1.0
 six==1.15.0
 wxPython==4.1.0
